@@ -1,0 +1,16 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: tripsense
+resources:
+  - k8s/namespace.yaml
+  - k8s/caddy-pvc.yaml
+  - k8s/deployment.yaml
+  - k8s/service.yaml
+configMapGenerator:
+  - name: tripsense-static
+    files:
+      - index.html=public/index.html
+      - get-started.html=public/get-started.html
+      - styles.css=public/styles.css
+      - app.js=public/app.js
+      - Caddyfile=Caddyfile

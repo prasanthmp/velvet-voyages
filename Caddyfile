@@ -1,0 +1,13 @@
+{
+	auto_https disable_redirects
+}
+
+http:// {
+	root * /usr/share/caddy
+	file_server
+}
+
+129.80.207.194.sslip.io {
+	root * /usr/share/caddy
+	file_server
+}

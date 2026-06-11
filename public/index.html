@@ -1,0 +1,295 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="TripSense enterprise travel companion dashboard"
+    />
+    <title>TripSense</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <div class="brand-lockup">
+          <div class="brand-mark" aria-hidden="true">TS</div>
+          <div>
+            <h1>TripSense</h1>
+            <p id="tripSubtitle">Ashburn customer visit</p>
+          </div>
+        </div>
+
+        <div class="topbar-actions">
+          <a class="ghost-link" href="./get-started.html">Get started</a>
+          <div class="mode-chip" id="modeChip" aria-live="polite">
+            <span></span>
+            <strong>Work mode</strong>
+          </div>
+          <div class="segmented-control" aria-label="Trip mode">
+            <button class="segment is-active" data-mode="work" type="button">
+              Work
+            </button>
+            <button class="segment" data-mode="personal" type="button">
+              Personal
+            </button>
+          </div>
+          <button class="ghost-button" id="locateButton" type="button">
+            Locate
+          </button>
+        </div>
+      </header>
+
+      <main class="dashboard">
+        <aside class="sidebar" aria-label="Trip preferences">
+          <section class="panel context-panel">
+            <div class="panel-heading">
+              <span class="eyebrow">Trip Context</span>
+              <strong id="modeLabel">Client entertainment</strong>
+            </div>
+
+            <label class="field-label" for="citySelect">City</label>
+            <select id="citySelect">
+              <option value="ashburn">Ashburn, VA</option>
+              <option value="new-york">New York, NY</option>
+              <option value="san-francisco">San Francisco, CA</option>
+              <option value="las-vegas">Las Vegas, NV</option>
+            </select>
+
+            <label class="field-label" for="anchorSelect">Anchor location</label>
+            <select id="anchorSelect"></select>
+
+            <div class="metric-grid">
+              <div>
+                <span class="metric-label">Policy</span>
+                <strong id="policyMetric">$85</strong>
+              </div>
+              <div>
+                <span class="metric-label">Radius</span>
+                <strong id="radiusMetric">2.5 mi</strong>
+              </div>
+            </div>
+          </section>
+
+          <section class="panel">
+            <div class="panel-heading">
+              <span class="eyebrow">Enterprise Context</span>
+              <strong>Calendar & CRM</strong>
+            </div>
+
+            <label class="field-label" for="eventSelect">Calendar event</label>
+            <select id="eventSelect"></select>
+
+            <label class="field-label" for="customerSelect">Customer</label>
+            <select id="customerSelect"></select>
+
+            <label class="field-label" for="purposeSelect">Meeting purpose</label>
+            <select id="purposeSelect">
+              <option value="client-dinner">Client dinner</option>
+              <option value="workshop">Workshop</option>
+              <option value="executive-briefing">Executive briefing</option>
+              <option value="team-outing">Team outing</option>
+              <option value="personal">Personal downtime</option>
+            </select>
+
+            <div class="insight-list" id="enterpriseSignals"></div>
+          </section>
+
+          <section class="panel">
+            <div class="panel-heading">
+              <span class="eyebrow">Profile</span>
+              <strong>Preferences</strong>
+            </div>
+
+            <label class="field-label" for="budgetInput">Expense limit</label>
+            <div class="range-row">
+              <input id="budgetInput" min="30" max="180" step="5" type="range" />
+              <span id="budgetValue"></span>
+            </div>
+
+            <label class="field-label" for="cuisineSelect">Cuisine</label>
+            <select id="cuisineSelect">
+              <option value="any">Any</option>
+              <option value="new american">New American</option>
+              <option value="italian">Italian</option>
+              <option value="japanese">Japanese</option>
+              <option value="mexican">Mexican</option>
+              <option value="indian">Indian</option>
+              <option value="steakhouse">Steakhouse</option>
+              <option value="mediterranean">Mediterranean</option>
+              <option value="seafood">Seafood</option>
+              <option value="french">French</option>
+              <option value="thai">Thai</option>
+            </select>
+
+            <label class="field-label" for="ambienceSelect">Ambience</label>
+            <select id="ambienceSelect">
+              <option value="quiet">Quiet</option>
+              <option value="upscale">Upscale</option>
+              <option value="casual">Casual</option>
+              <option value="lively">Lively</option>
+            </select>
+
+            <div class="checkbox-group" aria-label="Allergies">
+              <label>
+                <input type="checkbox" value="nuts" />
+                Nuts
+              </label>
+              <label>
+                <input type="checkbox" value="shellfish" />
+                Shellfish
+              </label>
+              <label>
+                <input type="checkbox" value="gluten" />
+                Gluten
+              </label>
+            </div>
+          </section>
+
+          <section class="panel">
+            <div class="panel-heading">
+              <span class="eyebrow">Availability & Policy</span>
+              <strong>Reservation fit</strong>
+            </div>
+
+            <label class="field-label" for="policySelect">Expense policy</label>
+            <select id="policySelect"></select>
+
+            <div class="field-grid">
+              <div>
+                <label class="field-label" for="dateInput">Date</label>
+                <input id="dateInput" type="date" />
+              </div>
+              <div>
+                <label class="field-label" for="timeSelect">Time</label>
+                <select id="timeSelect">
+                  <option value="18:00">6:00 PM</option>
+                  <option value="18:30">6:30 PM</option>
+                  <option value="19:00">7:00 PM</option>
+                  <option value="19:30">7:30 PM</option>
+                  <option value="20:00">8:00 PM</option>
+                  <option value="20:30">8:30 PM</option>
+                </select>
+              </div>
+            </div>
+
+            <label class="field-label" for="partyInput">Party size</label>
+            <div class="range-row">
+              <input id="partyInput" min="1" max="12" type="range" />
+              <span id="partyValue"></span>
+            </div>
+
+            <div class="insight-list" id="policySignals"></div>
+          </section>
+
+          <section class="panel signal-panel">
+            <div>
+              <span class="eyebrow">Location Signal</span>
+              <strong id="geoTitle">Awaiting location</strong>
+            </div>
+            <p id="geoDetail">Use Locate to enable proximity scoring.</p>
+          </section>
+        </aside>
+
+        <section class="workspace" aria-label="TripSense recommendations">
+          <div class="toolbar">
+            <div>
+              <span class="eyebrow">Recommendations</span>
+              <h2 id="recommendationTitle">Best options near anchor</h2>
+            </div>
+
+            <div class="toolbar-controls">
+              <div class="segmented-control compact" aria-label="View mode">
+                <button class="segment is-active" data-view="map" type="button">
+                  Map
+                </button>
+                <button class="segment" data-view="list" type="button">
+                  List
+                </button>
+              </div>
+              <select id="categorySelect" aria-label="Category">
+                <option value="all">All</option>
+                <option value="restaurant">Restaurants</option>
+                <option value="hotel">Hotels</option>
+                <option value="entertainment">Entertainment</option>
+                <option value="meeting">Meeting</option>
+              </select>
+            </div>
+          </div>
+
+          <section class="analytics-strip" aria-label="Admin analytics">
+            <div>
+              <span class="metric-label">Time Saved</span>
+              <strong id="timeSavedMetric">0 min</strong>
+            </div>
+            <div>
+              <span class="metric-label">Policy Fit</span>
+              <strong id="policyFitMetric">0%</strong>
+            </div>
+            <div>
+              <span class="metric-label">Accepted</span>
+              <strong id="acceptedMetric">0</strong>
+            </div>
+            <div>
+              <span class="metric-label">Satisfaction</span>
+              <strong id="satisfactionMetric">0%</strong>
+            </div>
+          </section>
+
+          <div class="content-grid">
+            <section class="map-view" id="mapView" aria-label="Map view">
+              <div class="map-canvas">
+                <div class="map-road road-one"></div>
+                <div class="map-road road-two"></div>
+                <div class="map-road road-three"></div>
+                <div class="anchor-marker" id="anchorMarker">
+                  <span></span>
+                </div>
+                <div id="mapMarkers"></div>
+              </div>
+            </section>
+
+            <section class="recommendation-list" id="recommendationList"></section>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <template id="placeCardTemplate">
+      <article class="place-card">
+        <div class="card-main">
+          <div class="place-title-row">
+            <div>
+              <span class="place-type"></span>
+              <h3></h3>
+            </div>
+            <div class="score-pill"></div>
+          </div>
+          <p class="place-summary"></p>
+          <div class="tag-row"></div>
+          <div class="place-meta"></div>
+        </div>
+        <div class="card-actions">
+          <button class="primary-button reserve-button" type="button">
+            Reserve
+          </button>
+          <button class="ghost-button maps-button" type="button">
+            Directions
+          </button>
+          <button class="icon-button like-button" type="button" aria-label="Like">
+            +
+          </button>
+          <button class="icon-button dislike-button" type="button" aria-label="Dislike">
+            -
+          </button>
+          <button class="icon-button share-button" type="button" aria-label="Share">
+            ^
+          </button>
+        </div>
+      </article>
+    </template>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
