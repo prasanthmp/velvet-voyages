@@ -39,6 +39,44 @@
 
         <section class="guide-section">
           <div>
+            <span class="eyebrow">Demo Access</span>
+            <h3>Judge-safe verification path</h3>
+          </div>
+          <div class="guide-grid demo-grid">
+            <article class="guide-card">
+              <strong>Public HTTPS entry</strong>
+              <p>
+                Open https://129.80.207.194.sslip.io/ to load the dashboard.
+                The same-origin guide is available at /get-started.html.
+              </p>
+            </article>
+            <article class="guide-card">
+              <strong>No login required</strong>
+              <p>
+                The demo has no auth wall, SSO, OAuth, CAPTCHA, account picker,
+                email verification, or manual approval step.
+              </p>
+            </article>
+            <article class="guide-card">
+              <strong>Deterministic flow</strong>
+              <p>
+                Select Las Vegas, switch between Work and Personal mode, change
+                cuisine or ambience, and verify the list and map update.
+              </p>
+            </article>
+            <article class="guide-card">
+              <strong>Stay on app origin</strong>
+              <p>
+                Automated judging should verify recommendations inside Wander.
+                Reserve and Directions intentionally open OpenTable or Google
+                Maps in a new destination.
+              </p>
+            </article>
+          </div>
+        </section>
+
+        <section class="guide-section">
+          <div>
             <span class="eyebrow">Quick Start</span>
             <h3>Use the dashboard in four steps</h3>
           </div>
@@ -179,6 +217,40 @@
               recommendations. Then switch to Personal mode to see the theme,
               ranking, and explanation tags change.
             </p>
+          </div>
+        </section>
+
+        <section class="guide-section">
+          <div>
+            <span class="eyebrow">Build Status</span>
+            <h3>Production-ready versus hackathon-grade</h3>
+          </div>
+          <div class="feature-list">
+            <div>
+              <strong>Production-ready</strong>
+              <p>
+                Public HTTPS delivery, OCI Kubernetes hosting, static asset
+                serving through Caddy, no-login dashboard access, responsive
+                UI, seeded recommendation data, deterministic scoring, and
+                browser-only state for feedback.
+              </p>
+            </div>
+            <div>
+              <strong>Hackathon-grade</strong>
+              <p>
+                Data is sampled instead of connected to live travel, HR, CRM,
+                expense, OpenTable, or calendar APIs. AI scoring is implemented
+                as explainable JavaScript logic rather than a trained model.
+              </p>
+            </div>
+            <div>
+              <strong>Next production step</strong>
+              <p>
+                Add enterprise identity, real policy systems, live reservation
+                availability, privacy controls, audit logging, and feedback
+                learning across devices.
+              </p>
+            </div>
           </div>
         </section>
       </main>

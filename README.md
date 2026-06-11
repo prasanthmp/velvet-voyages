@@ -23,6 +23,51 @@ The getting started page is available at `public/get-started.html` locally and
 `/get-started.html` when deployed. It explains the dashboard workflow and
 feature set in plain language.
 
+## Judge-safe demo path
+
+Use the HTTPS demo URL: `https://129.80.207.194.sslip.io/`.
+
+Wander is a public, no-login demo. There is no auth wall, SSO, OAuth, CAPTCHA,
+email verification, account picker, paid checkout, or manual approval step. The
+dashboard loads directly and the same-origin guide is available at
+`https://129.80.207.194.sslip.io/get-started.html`.
+
+Recommended browser verification flow:
+
+1. Open `/` and confirm the Wander dashboard is visible.
+2. Confirm the page shows `Public demo - no login required`.
+3. Select `Las Vegas, NV`.
+4. Change category to `Restaurants`.
+5. Change cuisine or ambience and verify the ranked list and map markers update.
+6. Switch between `Work` and `Personal` mode and verify the theme, ranking, and
+   explanation tags update.
+
+Do not use the `Reserve` or `Directions` buttons for automated verification.
+Those controls intentionally leave the app origin by opening OpenTable or Google
+Maps. The judge-safe proof path should stay on the Wander origin and verify the
+seeded recommendation behavior inside the dashboard.
+
+## Production-ready versus hackathon-grade
+
+Production-ready in this demo:
+
+- Public HTTPS access through Caddy.
+- Static web app served from OCI Kubernetes in Ashburn.
+- No-login dashboard path for judges and stakeholders.
+- Responsive dashboard with seeded city, policy, calendar, CRM, hotel,
+  restaurant, meeting, and entertainment data.
+- Deterministic recommendation scoring with visible explanation tags.
+- Browser-local feedback learning through like and dislike buttons.
+
+Hackathon-grade and next steps:
+
+- Data is sampled rather than connected to live travel, HR, CRM, expense,
+  calendar, reservation, or OpenTable APIs.
+- Recommendation scoring is explainable JavaScript logic rather than a trained
+  production model.
+- Enterprise identity, role-based access, audit logs, privacy controls, live
+  availability, and cross-device learning would be needed before production use.
+
 ## Local preview
 
 Open `public/index.html` in a browser. The app is static and does not require a
