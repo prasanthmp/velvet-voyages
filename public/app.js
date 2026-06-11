@@ -1,4 +1,4 @@
-const STORAGE_KEY = "tripsense-state-v1";
+const STORAGE_KEY = "wander-state-v1";
 
 const anchors = {
   ashburn: [
@@ -1432,7 +1432,7 @@ elements.locateButton.addEventListener("click", () => {
   }
 
   elements.geoTitle.textContent = "Locating";
-  elements.geoDetail.textContent = "Checking proximity to TripSense recommendations.";
+  elements.geoDetail.textContent = "Checking proximity to Wander recommendations.";
 
   navigator.geolocation.getCurrentPosition(
     (position) => {

@@ -1,6 +1,6 @@
-# TripSense
+# Wander
 
-TripSense is a no-login enterprise travel companion dashboard for business
+Wander is a no-login enterprise travel companion dashboard for business
 travelers. It recommends restaurants, hotels, meeting spaces, and entertainment
 using sample city data for Ashburn, New York, San Francisco, and Las Vegas.
 Each city has 10-20 recommendations per category across restaurants, hotels,
@@ -36,6 +36,9 @@ ConfigMap, so a local Docker installation is not required. Caddy provides HTTPS
 for `https://129.80.207.194.sslip.io/`, which resolves to the OCI Load Balancer
 IP.
 
+The Kubernetes namespace and service are intentionally still named `tripsense`
+to preserve the existing OCI LoadBalancer IP and HTTPS hostname.
+
 ```bash
 kubectl apply -k .
 kubectl -n tripsense rollout status deployment/tripsense
@@ -51,7 +54,7 @@ If Docker or another container builder is available, this image can also be
 built and pushed to OCIR:
 
 ```bash
-docker build -t tripsense:latest .
-docker tag tripsense:latest ocir.us-ashburn-1.oci.oraclecloud.com/<tenancy-namespace>/tripsense:latest
-docker push ocir.us-ashburn-1.oci.oraclecloud.com/<tenancy-namespace>/tripsense:latest
+docker build -t wander:latest .
+docker tag wander:latest ocir.us-ashburn-1.oci.oraclecloud.com/<tenancy-namespace>/wander:latest
+docker push ocir.us-ashburn-1.oci.oraclecloud.com/<tenancy-namespace>/wander:latest
 ```
