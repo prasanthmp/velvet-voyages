@@ -48,6 +48,17 @@ Recommended browser verification flow:
 7. Switch between `Work` and `Personal` mode and verify the theme, ranking, and
    explanation tags update.
 
+For deterministic AI Judge verification, use the judge-safe query mode:
+
+- Default work dashboard: `/?judge=1`
+- Restaurant page 2: `/?judge=1&category=restaurant&page=2`
+- Personal profile mode: `/?judge=1&mode=personal`
+- Get Started guide: `/get-started.html`
+
+Judge mode ignores prior browser local storage, starts from seeded demo data,
+does not persist clicks, and exposes stable `data-testid` selectors for browser
+automation.
+
 Do not use the `Reserve` or `Directions` buttons for automated verification.
 Those controls intentionally leave the app origin by opening OpenTable or Google
 Maps. The judge-safe proof path should stay on the Wander origin and verify the

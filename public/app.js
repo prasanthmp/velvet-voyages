@@ -1,5 +1,8 @@
 const STORAGE_KEY = "wander-state-v2";
 const PAGE_SIZE = 5;
+const queryParams = new URLSearchParams(window.location.search);
+const judgeMode = queryParams.get("judge") === "1";
+const hasQueryOverrides = Array.from(queryParams.keys()).length > 0;
 
 const anchors = {
   ashburn: [
@@ -835,12 +838,97 @@ const elements = {
 };
 
 function loadState() {
+  if (judgeMode) {
+    return applyQueryState(defaultState);
+  }
+
   try {
     const stored = JSON.parse(localStorage.getItem(STORAGE_KEY));
-    return { ...defaultState, ...stored };
+    return applyQueryState({ ...defaultState, ...stored });
   } catch {
-    return { ...defaultState };
+    return applyQueryState(defaultState);
   }
+}
+
+function stateFromCalendarEvent(eventId) {
+  const calendarEvent = calendarEvents.find((item) => item.id === eventId);
+  if (!calendarEvent) {
+    return {};
+  }
+
+  const customer = customerProfiles[calendarEvent.customerId];
+  const policyId = customer?.policyId || defaultState.policyId;
+  return {
+    eventId: calendarEvent.id,
+    city: calendarEvent.city,
+    anchorId: calendarEvent.anchorId,
+    customerId: calendarEvent.customerId,
+    mode: calendarEvent.mode,
+    purpose: calendarEvent.purpose,
+    reservationTime: calendarEvent.time,
+    partySize: calendarEvent.partySize,
+    policyId,
+    budget: policyProfiles[policyId].limit,
+    ambience: customer?.preference || defaultState.ambience,
+    location: null,
+    selectedPlaceId: null,
+  };
+}
+
+function applyQueryState(baseState) {
+  const nextState = {
+    ...baseState,
+    feedback: judgeMode ? {} : { ...(baseState.feedback || {}) },
+  };
+
+  if (judgeMode || hasQueryOverrides) {
+    nextState.location = null;
+    nextState.selectedPlaceId = null;
+  }
+
+  if (queryParams.has("event")) {
+    Object.assign(nextState, stateFromCalendarEvent(queryParams.get("event")));
+  }
+
+  if (queryParams.get("mode") === "personal") {
+    Object.assign(nextState, stateFromCalendarEvent("personal-downtime"));
+  } else if (queryParams.get("mode") === "work") {
+    Object.assign(nextState, stateFromCalendarEvent("vegas-expo"));
+  }
+
+  const city = queryParams.get("city");
+  if (anchors[city]) {
+    nextState.city = city;
+    nextState.anchorId = anchors[city][0].id;
+    nextState.eventId = "manual-trip";
+  }
+
+  const category = queryParams.get("category");
+  if (["all", ...categoryOrder].includes(category)) {
+    nextState.category = category;
+  }
+
+  const cuisine = queryParams.get("cuisine");
+  if (cuisine) {
+    nextState.cuisine = cuisine;
+  }
+
+  const ambience = queryParams.get("ambience");
+  if (ambience) {
+    nextState.ambience = ambience;
+  }
+
+  const view = queryParams.get("view");
+  if (["map", "list"].includes(view)) {
+    nextState.view = view;
+  }
+
+  const page = Number(queryParams.get("page"));
+  if (Number.isFinite(page) && page > 0) {
+    nextState.page = page;
+  }
+
+  return nextState;
 }
 
 function normalizeState(nextState) {
@@ -880,6 +968,10 @@ function normalizeState(nextState) {
 }
 
 function saveState() {
+  if (judgeMode) {
+    return;
+  }
+
   localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
 }
 
@@ -1254,6 +1346,7 @@ function renderPagination(sortedPlaces, pageItems, startIndex, totalPages) {
     button.className = "page-button";
     button.type = "button";
     button.textContent = control.label;
+    button.dataset.testid = `page-${control.label.toLowerCase()}`;
     button.disabled = control.disabled;
     button.classList.toggle("is-active", control.active);
     button.setAttribute("aria-label", `Show page ${control.page}`);
@@ -1277,6 +1370,7 @@ function renderCards(pageItems, startIndex) {
     const rank = startIndex + index + 1;
     const node = elements.cardTemplate.content.firstElementChild.cloneNode(true);
     node.dataset.placeId = place.id;
+    node.dataset.testid = "recommendation-card";
     node.classList.toggle("is-highlighted", state.selectedPlaceId === place.id || (!state.selectedPlaceId && index === 0));
     node.querySelector(".place-type").textContent = formatCategory(place.category);
     node.querySelector("h3").textContent = place.name;
@@ -1339,6 +1433,7 @@ function renderMap(pageItems, startIndex) {
     marker.type = "button";
     marker.className = "map-marker";
     marker.dataset.category = place.category;
+    marker.dataset.testid = "map-marker";
     marker.style.left = `${place.mapX}%`;
     marker.style.top = `${place.mapY}%`;
     marker.textContent = rank;

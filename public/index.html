@@ -14,7 +14,7 @@
     <div class="app-shell">
       <header class="topbar">
         <div class="brand-lockup">
-          <div class="brand-mark" aria-hidden="true">
+          <div class="brand-mark" data-testid="profile-icon" aria-hidden="true">
             <svg class="profile-icon" viewBox="0 0 120 120">
               <circle class="profile-icon-route" cx="17" cy="50" r="7" />
               <path
@@ -34,7 +34,7 @@
         </div>
 
         <div class="topbar-actions">
-          <div class="demo-status" aria-label="Demo access status">
+          <div class="demo-status" data-testid="demo-status" aria-label="Demo access status">
             Public demo - no login required
           </div>
           <a class="ghost-link" href="./get-started.html">Get started</a>
@@ -56,7 +56,7 @@
         </div>
       </header>
 
-      <main class="dashboard">
+      <main class="dashboard" data-testid="dashboard">
         <aside class="sidebar" aria-label="Trip preferences">
           <section class="panel context-panel">
             <div class="panel-heading">
@@ -65,7 +65,7 @@
             </div>
 
             <label class="field-label" for="citySelect">City</label>
-            <select id="citySelect">
+            <select id="citySelect" data-testid="city-select">
               <option value="ashburn">Ashburn, VA</option>
               <option value="new-york">New York, NY</option>
               <option value="san-francisco">San Francisco, CA</option>
@@ -94,13 +94,13 @@
             </div>
 
             <label class="field-label" for="eventSelect">Calendar event</label>
-            <select id="eventSelect"></select>
+            <select id="eventSelect" data-testid="event-select"></select>
 
             <label class="field-label" for="customerSelect">Customer</label>
-            <select id="customerSelect"></select>
+            <select id="customerSelect" data-testid="customer-select"></select>
 
             <label class="field-label" for="purposeSelect">Meeting purpose</label>
-            <select id="purposeSelect">
+            <select id="purposeSelect" data-testid="purpose-select">
               <option value="client-dinner">Client dinner</option>
               <option value="workshop">Workshop</option>
               <option value="executive-briefing">Executive briefing</option>
@@ -124,7 +124,7 @@
             </div>
 
             <label class="field-label" for="cuisineSelect">Cuisine</label>
-            <select id="cuisineSelect">
+            <select id="cuisineSelect" data-testid="cuisine-select">
               <option value="any">Any</option>
               <option value="new american">New American</option>
               <option value="italian">Italian</option>
@@ -139,7 +139,7 @@
             </select>
 
             <label class="field-label" for="ambienceSelect">Ambience</label>
-            <select id="ambienceSelect">
+            <select id="ambienceSelect" data-testid="ambience-select">
               <option value="quiet">Quiet</option>
               <option value="upscale">Upscale</option>
               <option value="casual">Casual</option>
@@ -169,7 +169,7 @@
             </div>
 
             <label class="field-label" for="policySelect">Expense policy</label>
-            <select id="policySelect"></select>
+            <select id="policySelect" data-testid="policy-select"></select>
 
             <div class="field-grid">
               <div>
@@ -216,14 +216,14 @@
 
             <div class="toolbar-controls">
               <div class="segmented-control compact" aria-label="View mode">
-                <button class="segment is-active" data-view="map" type="button">
+                <button class="segment is-active" data-view="map" data-testid="map-view-button" type="button">
                   Map
                 </button>
-                <button class="segment" data-view="list" type="button">
+                <button class="segment" data-view="list" data-testid="list-view-button" type="button">
                   List
                 </button>
               </div>
-              <select id="categorySelect" aria-label="Category">
+              <select id="categorySelect" data-testid="category-select" aria-label="Category">
                 <option value="all">All</option>
                 <option value="restaurant">Restaurants</option>
                 <option value="hotel">Hotels</option>
@@ -252,12 +252,12 @@
             </div>
           </section>
 
-          <section class="pagination-bar" aria-label="Recommendation pages">
+          <section class="pagination-bar" data-testid="pagination-bar" aria-label="Recommendation pages">
             <div>
               <span class="eyebrow">Top 5</span>
-              <strong id="paginationSummary">Showing recommendations</strong>
+              <strong id="paginationSummary" data-testid="pagination-summary">Showing recommendations</strong>
             </div>
-            <div class="pagination-controls" id="paginationControls"></div>
+            <div class="pagination-controls" id="paginationControls" data-testid="pagination-controls"></div>
           </section>
 
           <div class="content-grid">
@@ -266,6 +266,7 @@
                 <iframe
                   class="google-map-frame"
                   id="googleMapFrame"
+                  data-testid="google-map-frame"
                   title="Google Maps business and street view"
                   loading="lazy"
                   referrerpolicy="no-referrer-when-downgrade"
@@ -277,7 +278,11 @@
               </div>
             </section>
 
-            <section class="recommendation-list" id="recommendationList"></section>
+            <section
+              class="recommendation-list"
+              id="recommendationList"
+              data-testid="recommendation-list"
+            ></section>
           </div>
         </section>
       </main>
