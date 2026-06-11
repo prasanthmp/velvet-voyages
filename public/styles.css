@@ -14,6 +14,8 @@
   --accent: #147d72;
   --accent-dark: #0d5f56;
   --accent-soft: #e9f4f1;
+  --profile-icon-route: #006b5f;
+  --profile-icon-spark: #ff9a00;
   --mode-bg-a: rgba(20, 125, 114, 0.08);
   --mode-bg-b: rgba(63, 111, 145, 0.07);
   --shadow: 0 18px 50px rgba(30, 39, 35, 0.09);
@@ -25,6 +27,7 @@ body[data-mode="personal"] {
   --accent: #c05265;
   --accent-dark: #8f3346;
   --accent-soft: #fff0ed;
+  --profile-icon-route: #b2254f;
   --mode-bg-a: rgba(192, 82, 101, 0.13);
   --mode-bg-b: rgba(180, 135, 27, 0.11);
 }
@@ -84,16 +87,49 @@ button {
 
 .brand-mark {
   align-items: center;
-  background: var(--accent-dark);
+  background: white;
+  border: 1px solid color-mix(in srgb, var(--profile-icon-route) 18%, var(--line));
   border-radius: 8px;
-  color: white;
   display: flex;
-  font-size: 14px;
-  font-weight: 800;
-  height: 42px;
+  height: 52px;
   justify-content: center;
-  letter-spacing: 0;
-  width: 42px;
+  overflow: hidden;
+  padding: 3px;
+  width: 52px;
+}
+
+.profile-icon {
+  display: block;
+  height: 100%;
+  overflow: visible;
+  width: 100%;
+}
+
+.profile-icon-route {
+  fill: none;
+  stroke: var(--profile-icon-route);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 11;
+  transition:
+    stroke 180ms ease,
+    fill 180ms ease;
+}
+
+path.profile-icon-route {
+  stroke-dasharray: 15 18;
+}
+
+circle.profile-icon-route {
+  fill: var(--profile-icon-route);
+  stroke: none;
+}
+
+.profile-icon-spark {
+  fill: none;
+  stroke: var(--profile-icon-spark);
+  stroke-linejoin: round;
+  stroke-width: 8;
 }
 
 h1,
