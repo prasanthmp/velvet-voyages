@@ -1,4 +1,5 @@
-const STORAGE_KEY = "wander-state-v1";
+const STORAGE_KEY = "wander-state-v2";
+const PAGE_SIZE = 5;
 
 const anchors = {
   ashburn: [
@@ -767,23 +768,24 @@ const recommendationPlaces = [
 const defaultState = {
   mode: "work",
   view: "map",
-  city: "ashburn",
-  anchorId: "iad-customer",
-  eventId: "ashburn-discovery",
-  customerId: "acme-cloud",
+  city: "las-vegas",
+  anchorId: "las-customer",
+  eventId: "vegas-expo",
+  customerId: "aurora-resorts",
   purpose: "client-dinner",
-  policyId: "standard",
+  policyId: "executive",
   reservationDate: defaultDate(),
-  reservationTime: "19:00",
-  partySize: 4,
+  reservationTime: "20:00",
+  partySize: 8,
   category: "all",
-  budget: 85,
+  budget: 125,
   cuisine: "any",
-  ambience: "quiet",
+  ambience: "lively",
   allergies: [],
   feedback: {},
   location: null,
   selectedPlaceId: null,
+  page: 1,
 };
 
 let state = normalizeState(loadState());
@@ -811,6 +813,7 @@ const elements = {
   list: document.querySelector("#recommendationList"),
   mapView: document.querySelector("#mapView"),
   mapMarkers: document.querySelector("#mapMarkers"),
+  googleMapFrame: document.querySelector("#googleMapFrame"),
   anchorMarker: document.querySelector("#anchorMarker"),
   tripSubtitle: document.querySelector("#tripSubtitle"),
   modeLabel: document.querySelector("#modeLabel"),
@@ -826,6 +829,8 @@ const elements = {
   policyFitMetric: document.querySelector("#policyFitMetric"),
   acceptedMetric: document.querySelector("#acceptedMetric"),
   satisfactionMetric: document.querySelector("#satisfactionMetric"),
+  paginationSummary: document.querySelector("#paginationSummary"),
+  paginationControls: document.querySelector("#paginationControls"),
   cardTemplate: document.querySelector("#placeCardTemplate"),
 };
 
@@ -870,6 +875,7 @@ function normalizeState(nextState) {
     partySize: clamp(Number(nextState.partySize) || defaultState.partySize, 1, 12),
     category,
     budget: Number(nextState.budget) || policyProfiles[policyId].limit,
+    page: Math.max(1, Number(nextState.page) || 1),
   };
 }
 
@@ -1041,6 +1047,16 @@ function mapsUrl(place) {
   return `https://www.google.com/maps/dir/?api=1&destination=${destination}`;
 }
 
+function googleMapsEmbedUrl(sortedPlaces) {
+  const selected = sortedPlaces.find((place) => place.id === state.selectedPlaceId);
+  const anchor = activeAnchor();
+  const query =
+    selected && selected.category === "restaurant"
+      ? `${selected.name}, ${selected.address}`
+      : `${anchor.lat},${anchor.lng}`;
+  return `https://www.google.com/maps?q=${encodeURIComponent(query)}&ll=${anchor.lat},${anchor.lng}&z=15&output=embed`;
+}
+
 function sharePlace(place) {
   const text = `${place.name} - ${formatCategory(place.category)} in ${place.address}. ${place.summary}`;
   if (navigator.share) {
@@ -1200,16 +1216,71 @@ function renderGeoStatus(sortedPlaces) {
   elements.radiusMetric.textContent = `${Math.max(0.5, nearest.computedDistance).toFixed(1)} mi`;
 }
 
-function renderCards(sortedPlaces) {
+function paginationDetails(sortedPlaces) {
+  const totalPages = Math.max(1, Math.ceil(sortedPlaces.length / PAGE_SIZE));
+  state.page = clamp(state.page, 1, totalPages);
+  const startIndex = (state.page - 1) * PAGE_SIZE;
+  return {
+    pageItems: sortedPlaces.slice(startIndex, startIndex + PAGE_SIZE),
+    startIndex,
+    totalPages,
+  };
+}
+
+function renderPagination(sortedPlaces, pageItems, startIndex, totalPages) {
+  const endIndex = sortedPlaces.length ? startIndex + pageItems.length : 0;
+  elements.paginationSummary.textContent = sortedPlaces.length
+    ? `Showing ${startIndex + 1}-${endIndex} of ${sortedPlaces.length} recommendations`
+    : "No recommendations match the current filters";
+
+  elements.paginationControls.innerHTML = "";
+
+  const controls = [
+    { label: "Previous", page: Math.max(1, state.page - 1), disabled: state.page === 1 },
+    ...Array.from({ length: totalPages }, (_, index) => ({
+      label: String(index + 1),
+      page: index + 1,
+      active: state.page === index + 1,
+    })),
+    {
+      label: "Next",
+      page: Math.min(totalPages, state.page + 1),
+      disabled: state.page === totalPages,
+    },
+  ];
+
+  controls.forEach((control) => {
+    const button = document.createElement("button");
+    button.className = "page-button";
+    button.type = "button";
+    button.textContent = control.label;
+    button.disabled = control.disabled;
+    button.classList.toggle("is-active", control.active);
+    button.setAttribute("aria-label", `Show page ${control.page}`);
+    button.addEventListener("click", () => {
+      if (state.page === control.page) {
+        return;
+      }
+      state.page = control.page;
+      state.selectedPlaceId = null;
+      saveState();
+      render();
+    });
+    elements.paginationControls.append(button);
+  });
+}
+
+function renderCards(pageItems, startIndex) {
   elements.list.innerHTML = "";
 
-  sortedPlaces.forEach((place, index) => {
+  pageItems.forEach((place, index) => {
+    const rank = startIndex + index + 1;
     const node = elements.cardTemplate.content.firstElementChild.cloneNode(true);
     node.dataset.placeId = place.id;
     node.classList.toggle("is-highlighted", state.selectedPlaceId === place.id || (!state.selectedPlaceId && index === 0));
     node.querySelector(".place-type").textContent = formatCategory(place.category);
     node.querySelector("h3").textContent = place.name;
-    node.querySelector(".score-pill").textContent = `${place.score}% fit`;
+    node.querySelector(".score-pill").textContent = `#${rank} - ${place.score}% fit`;
     node.querySelector(".place-summary").textContent = place.summary;
 
     const tags = node.querySelector(".tag-row");
@@ -1245,7 +1316,7 @@ function renderCards(sortedPlaces) {
     node.addEventListener("mouseenter", () => {
       state.selectedPlaceId = place.id;
       saveState();
-      renderMap(sortedPlaces);
+      renderMap(pageItems, startIndex);
       highlightCards();
     });
 
@@ -1259,22 +1330,24 @@ function highlightCards() {
   });
 }
 
-function renderMap(sortedPlaces) {
+function renderMap(pageItems, startIndex) {
+  elements.googleMapFrame.src = googleMapsEmbedUrl(pageItems);
   elements.mapMarkers.innerHTML = "";
-  sortedPlaces.forEach((place, index) => {
+  pageItems.forEach((place, index) => {
     const marker = document.createElement("button");
+    const rank = startIndex + index + 1;
     marker.type = "button";
     marker.className = "map-marker";
     marker.dataset.category = place.category;
     marker.style.left = `${place.mapX}%`;
     marker.style.top = `${place.mapY}%`;
-    marker.textContent = index + 1;
+    marker.textContent = rank;
     marker.title = `${place.name}, ${place.score}% fit`;
     marker.classList.toggle("is-selected", state.selectedPlaceId === place.id);
     marker.addEventListener("click", () => {
       state.selectedPlaceId = place.id;
       saveState();
-      renderMap(sortedPlaces);
+      renderMap(pageItems, startIndex);
       highlightCards();
       document.querySelector(`[data-place-id="${place.id}"]`)?.scrollIntoView({
         behavior: "smooth",
@@ -1293,16 +1366,26 @@ function render() {
   if (!state.selectedPlaceId || !sortedPlaces.some((place) => place.id === state.selectedPlaceId)) {
     state.selectedPlaceId = sortedPlaces[0]?.id || null;
   }
+  const { pageItems, startIndex, totalPages } = paginationDetails(sortedPlaces);
+  if (pageItems.length && !pageItems.some((place) => place.id === state.selectedPlaceId)) {
+    state.selectedPlaceId = pageItems[0].id;
+  }
+  if (!pageItems.length) {
+    state.selectedPlaceId = null;
+  }
+  saveState();
   renderGeoStatus(sortedPlaces);
   renderAnalytics(sortedPlaces);
-  renderCards(sortedPlaces);
-  renderMap(sortedPlaces);
+  renderPagination(sortedPlaces, pageItems, startIndex, totalPages);
+  renderCards(pageItems, startIndex);
+  renderMap(pageItems, startIndex);
 }
 
 function updateFilters(updates, options = {}) {
   state = normalizeState({
     ...state,
     ...updates,
+    page: options.keepPage ? state.page : 1,
     selectedPlaceId: options.keepSelection ? state.selectedPlaceId : null,
   });
   saveState();
@@ -1320,7 +1403,7 @@ elements.modeButtons.forEach((button) => {
 
 elements.viewButtons.forEach((button) => {
   button.addEventListener("click", () => {
-    updateFilters({ view: button.dataset.view }, { keepSelection: true });
+    updateFilters({ view: button.dataset.view }, { keepSelection: true, keepPage: true });
   });
 });
 

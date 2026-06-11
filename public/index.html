@@ -17,7 +17,7 @@
           <div class="brand-mark" aria-hidden="true">W</div>
           <div>
             <h1>Wander</h1>
-            <p id="tripSubtitle">Ashburn customer visit</p>
+            <p id="tripSubtitle">Strip customer briefing - Hospitality account review</p>
           </div>
         </div>
 
@@ -57,7 +57,7 @@
               <option value="ashburn">Ashburn, VA</option>
               <option value="new-york">New York, NY</option>
               <option value="san-francisco">San Francisco, CA</option>
-              <option value="las-vegas">Las Vegas, NV</option>
+              <option value="las-vegas" selected>Las Vegas, NV</option>
             </select>
 
             <label class="field-label" for="anchorSelect">Anchor location</label>
@@ -66,7 +66,7 @@
             <div class="metric-grid">
               <div>
                 <span class="metric-label">Policy</span>
-                <strong id="policyMetric">$85</strong>
+                <strong id="policyMetric">$125</strong>
               </div>
               <div>
                 <span class="metric-label">Radius</span>
@@ -240,12 +240,24 @@
             </div>
           </section>
 
+          <section class="pagination-bar" aria-label="Recommendation pages">
+            <div>
+              <span class="eyebrow">Top 5</span>
+              <strong id="paginationSummary">Showing recommendations</strong>
+            </div>
+            <div class="pagination-controls" id="paginationControls"></div>
+          </section>
+
           <div class="content-grid">
             <section class="map-view" id="mapView" aria-label="Map view">
               <div class="map-canvas">
-                <div class="map-road road-one"></div>
-                <div class="map-road road-two"></div>
-                <div class="map-road road-three"></div>
+                <iframe
+                  class="google-map-frame"
+                  id="googleMapFrame"
+                  title="Google Maps business and street view"
+                  loading="lazy"
+                  referrerpolicy="no-referrer-when-downgrade"
+                ></iframe>
                 <div class="anchor-marker" id="anchorMarker">
                   <span></span>
                 </div>

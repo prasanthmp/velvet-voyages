@@ -13,6 +13,11 @@ Work and Personal modes use distinct visual themes, and recommendations
 recompute when the traveler changes city, anchor location, category, cuisine,
 ambience, budget, allergy settings, browser location, or mode.
 
+The default demo trip opens in Las Vegas. The map panel uses an embedded Google
+Maps view so streets and nearby businesses are visible, while Wander overlays
+the current recommendation page markers. Recommendations are paged in Top 5
+groups and the list panel scrolls independently on desktop.
+
 The dashboard also includes demo-ready enterprise features: sample calendar
 events that auto-set trip context, CRM account profiles, expense policy profiles,
 party size/date/time availability scoring, dynamic "why this recommendation"
@@ -36,10 +41,11 @@ Recommended browser verification flow:
 
 1. Open `/` and confirm the Wander dashboard is visible.
 2. Confirm the page shows `Public demo - no login required`.
-3. Select `Las Vegas, NV`.
+3. Confirm the default city is `Las Vegas, NV`.
 4. Change category to `Restaurants`.
-5. Change cuisine or ambience and verify the ranked list and map markers update.
-6. Switch between `Work` and `Personal` mode and verify the theme, ranking, and
+5. Use the Top 5 page buttons and verify the list and Google map markers update.
+6. Change cuisine or ambience and verify the ranked list and map markers update.
+7. Switch between `Work` and `Personal` mode and verify the theme, ranking, and
    explanation tags update.
 
 Do not use the `Reserve` or `Directions` buttons for automated verification.
